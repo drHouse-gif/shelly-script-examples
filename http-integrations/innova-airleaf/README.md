@@ -1,17 +1,44 @@
 # INNOVA AirLeaf EWF644II
 
-Local Shelly Script integration for an **INNOVA AirLeaf EWF644II** SMART TOUCH fan-coil controller with integrated Wi-Fi that reports `deviceType` `002`.
+Local Shelly Script integration for an **INNOVA AirLeaf EWF644II** SMART TOUCH fan-coil controller with integrated Wi-Fi reporting `deviceType 002`.
 
 ## Script
 
-- [`innova-airleaf-ewf644ii_vc.shelly.js`](innova-airleaf-ewf644ii_vc.shelly.js) — self-contained Shelly Gen3 controller using the INNOVA local HTTP API and six fixed Virtual Components for Shelly Smart Control.
+- [`innova-airleaf-ewf644ii_vc.shelly.js`](innova-airleaf-ewf644ii_vc.shelly.js) — self-contained, memory-optimized Shelly Gen3 controller using the INNOVA local HTTP API and six fixed Virtual Components for Shelly Smart Control.
 
-## Requirements
+## Validated hardware
 
-- Shelly Gen3 device with Scripts and Dynamic Virtual Components.
-- INNOVA AirLeaf EWF644II reachable from Shelly over local IPv4 HTTP.
-- Target status response must report `deviceType` `002`.
-- Configure `CONFIG.host` at the top of the script.
+- INNOVA AirLeaf EWF644II
+- `deviceType 002`
+- Shelly Plug S Gen3
+- firmware 2.0.0
+- Shelly Smart Control
+
+## Configuration
+
+Set the AirLeaf local address at the top of the script:
+
+```javascript
+var CONFIG = {
+  host: '192.0.2.10',
+  ...
+};
+```
+
+The committed address is a TEST-NET placeholder. Replace it with the installation's local AirLeaf IPv4 address.
+
+## Virtual Components
+
+| Component | Purpose |
+|---|---|
+| `boolean:200` | Power |
+| `enum:201` | Heating / cooling mode |
+| `number:202` | Target temperature, 16–31 °C, step 0.5 °C |
+| `enum:203` | Fan: auto / night / min / max |
+| `number:204` | Room temperature |
+| `text:205` | Connection / command / error status |
+
+The enum components define `meta.ui.titles` for Shelly Smart Control display labels. Number telemetry uses Cloud `measurement` metadata; state controls use `log` metadata.
 
 ## API used
 
@@ -23,12 +50,36 @@ Local Shelly Script integration for an **INNOVA AirLeaf EWF644II** SMART TOUCH f
 - `POST /api/v/1/set/setpoint`
 - `POST /api/v/1/set/function/{auto|night|min|max}`
 
-The controller serializes HTTP requests, validates the device type, confirms accepted commands with a fresh status read, and uses a watchdog for missing HTTP callbacks.
+Temperature setpoints are sent in tenths of a degree Celsius, for example 22.0 °C as `{"temp":220}`.
 
-## Virtual Components
+Validated status mapping:
 
-The script creates or repairs fixed component IDs `200` through `205` for power, mode, temperature setpoint, fan function, room temperature, and connection status before starting the HTTP controller. These components provide the Shelly Smart Control representation of the AirLeaf controller.
+- `ps`: 1 = on
+- `sp`: setpoint × 0.1 °C
+- `ta`: room temperature × 0.1 °C
+- `wm`: 3 = heating, 5 = cooling
+- `fn`: 1 = auto, 2 = night, 3 = min, 4 = max
+
+## Runtime design
+
+The controller:
+
+- creates or reuses the six fixed Virtual Components before starting;
+- refreshes existing component metadata;
+- serializes all HTTP requests;
+- coalesces pending changes for the same control;
+- powers the AirLeaf before a mode change when required;
+- clears dependent queued commands after a failed control request;
+- waits briefly and performs one physical status readback after command activity;
+- rejects synchronization unless the device reports `deviceType 002`;
+- filters script-generated VC events to prevent feedback loops;
+- uses request IDs and a watchdog for stale/missing callbacks;
+- avoids `Array.shift()` because it is unavailable on the tested Shelly mJS build.
+
+## Memory note
+
+An earlier generic-helper version could exhaust script memory on Plug S Gen3. This version keeps the runtime self-contained while using a compact fixed-component bootstrap and reduced runtime state.
 
 ## Scope
 
-Protocol behavior has been validated for a real AirLeaf installation reporting `deviceType` `002`. The target hardware is **INNOVA AirLeaf EWF644II**. Do not assume other INNOVA controls or device types expose identical fields or endpoint semantics without validation.
+The protocol behavior documented here is validated for **INNOVA AirLeaf EWF644II / deviceType 002**. Other INNOVA controls or device types should not be assumed to use the same endpoint or value mapping without validation.
