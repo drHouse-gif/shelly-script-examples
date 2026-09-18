@@ -1,14 +1,13 @@
 [
   {
-    "fname": "ble/ble_btn_in_range.shelly.js",
-    "title": "BLU presence watcher with auto-off",
-    "description": "Tracks BLU device presence via BTHome, logs absence, and turns off a local switch after a timeout.",
+    "fname": "ble/ble-PTM215B-button.shelly.js",
+    "title": "PTM215B EnOcean BLE button handler",
+    "description": "Handles PTM215B energy-harvesting BLE button events to control up to 4 relays.",
     "tags": [
       "ble",
-      "shelly-blu",
-      "bthome",
-      "switch",
-      "presence"
+      "input",
+      "automation",
+      "enocean"
     ]
   },
   {
@@ -31,19 +30,6 @@
       "sensors",
       "automation",
       "aranet"
-    ]
-  },
-  {
-    "fname": "ble/ble-blu-button-presence_vc.shelly.js",
-    "title": "Shelly BLU button presence watcher + Virtual Components",
-    "description": "Tracks paired Shelly BLU button beacon presence through bthomedevice components and updates a self-created Boolean Virtual Component for nearby/away state.",
-    "tags": [
-      "ble",
-      "shelly-blu",
-      "bthome",
-      "virtual-components",
-      "presence",
-      "monitoring"
     ]
   },
   {
@@ -98,17 +84,6 @@
       "battery",
       "monitoring",
       "xiaomi"
-    ]
-  },
-  {
-    "fname": "ble/ble-PTM215B-button.shelly.js",
-    "title": "PTM215B EnOcean BLE button handler",
-    "description": "Handles PTM215B energy-harvesting BLE button events to control up to 4 relays.",
-    "tags": [
-      "ble",
-      "input",
-      "automation",
-      "enocean"
     ]
   },
   {
@@ -193,6 +168,31 @@
     "tags": [
       "ble",
       "shelly-blu",
+      "monitoring"
+    ]
+  },
+  {
+    "fname": "ble/ble_btn_in_range.shelly.js",
+    "title": "BLU presence watcher with auto-off",
+    "description": "Tracks BLU device presence via BTHome, logs absence, and turns off a local switch after a timeout.",
+    "tags": [
+      "ble",
+      "shelly-blu",
+      "bthome",
+      "switch",
+      "presence"
+    ]
+  },
+  {
+    "fname": "ble/ble-blu-button-presence_vc.shelly.js",
+    "title": "Shelly BLU button presence watcher + Virtual Components",
+    "description": "Tracks paired Shelly BLU button beacon presence through bthomedevice components and updates a self-created Boolean Virtual Component for nearby/away state.",
+    "tags": [
+      "ble",
+      "shelly-blu",
+      "bthome",
+      "virtual-components",
+      "presence",
       "monitoring"
     ]
   },
@@ -457,16 +457,6 @@
     ]
   },
   {
-    "fname": "http-integrations/http_post_watts_to_thingspeak/http_post_watts_to_thingspeak.shelly.js",
-    "title": "Send energy meter watts to ThingSpeak via HTTP POST",
-    "description": "Posts live active power (watts) to a ThingSpeak channel at a fixed interval.",
-    "tags": [
-      "http",
-      "energy",
-      "thingspeak"
-    ]
-  },
-  {
     "fname": "http-integrations/http-handlers/http-handlers.shelly.js",
     "title": "Shelly HTTP script handling GET requests, query strings",
     "description": "This script registers a HTTP handler endpoint and implements simple logic for requests and handlers for\nthose requests. Reconfiguration of a Switch component as an example is included",
@@ -485,6 +475,16 @@
       "energy",
       "notifications",
       "load-management"
+    ]
+  },
+  {
+    "fname": "http-integrations/http_post_watts_to_thingspeak/http_post_watts_to_thingspeak.shelly.js",
+    "title": "Send energy meter watts to ThingSpeak via HTTP POST",
+    "description": "Posts live active power (watts) to a ThingSpeak channel at a fixed interval.",
+    "tags": [
+      "http",
+      "energy",
+      "thingspeak"
     ]
   },
   {
@@ -802,7 +802,7 @@
   {
     "fname": "power-energy/automatic-transfer-switch/iats_grid_backup_controller.shelly.js",
     "title": "iATS two-channel grid/backup automatic transfer switch controller",
-    "description": "Controls K1 (grid) and K2 (backup) contactors on a two-channel Shelly device (Pro 2, Pro 2PM, Plus 2PM, 2PM Gen3/Gen4 in switch profile). SW1/input:0 = grid available; SW2/input:1 = backup available. Grid is preferred when both sources are present. Physical inputs are detached from outputs on boot — this script is the sole owner of switch:0 (K2) and switch:1 (K1). Both outputs are opened before a transfer; a configurable delay prevents contactor overlap. Optional manual override is received from the Sensor Add-on helper via KVS; a stale-sequence watchdog reverts to AUTO when the helper stops publishing.",
+    "description": "Controls K1 (grid) and K2 (backup) contactors on a two-channel Shelly device (Pro 2, Pro 2PM, Plus 2PM, 2PM Gen3/Gen4 in switch profile). SW1/input:0 = grid available; SW2/input:1 = backup available. Grid is preferred when both sources are present. Physical inputs are detached from outputs on boot \u2014 this script is the sole owner of switch:0 (K2) and switch:1 (K1). Both outputs are opened before a transfer; a configurable delay prevents contactor overlap. Optional manual override is received from the Sensor Add-on helper via KVS; a stale-sequence watchdog reverts to AUTO when the helper stops publishing.",
     "doc": "power-energy/automatic-transfer-switch/README.md",
     "tags": [
       "energy",
@@ -816,7 +816,7 @@
   {
     "fname": "power-energy/automatic-transfer-switch/iats_sensor_addon_manual_control.shelly.js",
     "title": "iATS Sensor Add-on manual control helper",
-    "description": "Companion script for the iATS controller, running on the Shelly Pro Sensor Add-on. DIN0 (input:100) selects AUTO vs MANUAL mode; DIN1 (input:101) selects GRID vs PV target. Publishes the current selection to KVS at a configurable interval. Does not touch relay outputs — iats_grid_backup_controller.shelly.js remains the sole owner of switch:0/1 and validates source availability before acting on any manual request.",
+    "description": "Companion script for the iATS controller, running on the Shelly Pro Sensor Add-on. DIN0 (input:100) selects AUTO vs MANUAL mode; DIN1 (input:101) selects GRID vs PV target. Publishes the current selection to KVS at a configurable interval. Does not touch relay outputs \u2014 iats_grid_backup_controller.shelly.js remains the sole owner of switch:0/1 and validates source availability before acting on any manual request.",
     "doc": "power-energy/automatic-transfer-switch/README.md",
     "tags": [
       "energy",
@@ -1078,6 +1078,16 @@
     ]
   },
   {
+    "fname": "the_pill/MODBUS/ComWinTop/mb308v.shelly.js",
+    "title": "CWT-MB308V MODBUS example",
+    "description": "Example integration for the ComWinTop MB308V IO module over MODBUS-RTU.",
+    "tags": [
+      "the-pill",
+      "modbus-rtu",
+      "comwintop"
+    ]
+  },
+  {
     "fname": "the_pill/MODBUS/ComWinTop/mb308v_vc.shelly.js",
     "title": "CWT-MB308V MODBUS example + Virtual Components",
     "description": "Example integration for the ComWinTop MB308V IO module over",
@@ -1089,63 +1099,17 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/ComWinTop/mb308v.shelly.js",
-    "title": "CWT-MB308V MODBUS example",
-    "description": "Example integration for the ComWinTop MB308V IO module over MODBUS-RTU.",
-    "tags": [
-      "the-pill",
-      "modbus-rtu",
-      "comwintop"
-    ]
-  },
-  {
-    "fname": "the_pill/MODBUS/Davis/pyranometer_vc.shelly.js",
-    "title": "Davis Pyranometer MODBUS-RTU Reader + Virtual Components",
-    "description": "MODBUS-RTU reader for a Davis-compatible RS-485 pyranometer with",
+    "fname": "the_pill/MODBUS/DFRobot/SEN0492/sen0492.shelly.js",
+    "title": "DFRobot SEN0492 Laser Ranging Sensor - MODBUS-RTU reader",
+    "description": "Reads distance and status from a DFRobot SEN0492 RS485 laser",
     "tags": [
       "the-pill",
       "modbus-rtu",
       "rs485",
-      "virtual-components",
-      "solar",
-      "davis"
-    ]
-  },
-  {
-    "fname": "the_pill/MODBUS/Davis/pyranometer.shelly.js",
-    "title": "Davis Pyranometer MODBUS example",
-    "description": "Reads solar irradiance (W/m2) from a Davis-compatible RS-485",
-    "tags": [
-      "the-pill",
-      "modbus-rtu",
-      "rs485",
-      "solar",
-      "davis"
-    ]
-  },
-  {
-    "fname": "the_pill/MODBUS/Deye/deye_vc.shelly.js",
-    "title": "Deye SG02LP1 MODBUS-RTU + Virtual Components",
-    "description": "MODBUS-RTU reader for Deye SG02LP1 solar inverter with",
-    "tags": [
-      "the-pill",
-      "modbus-rtu",
-      "virtual-components",
-      "solar",
-      "inverter",
-      "deye"
-    ]
-  },
-  {
-    "fname": "the_pill/MODBUS/Deye/deye.shelly.js",
-    "title": "Deye SG02LP1 MODBUS-RTU",
-    "description": "MODBUS-RTU example for reading Deye SG02LP1 solar inverter",
-    "tags": [
-      "the-pill",
-      "modbus-rtu",
-      "solar",
-      "inverter",
-      "deye"
+      "sensors",
+      "monitoring",
+      "distance",
+      "dfrobot"
     ]
   },
   {
@@ -1164,17 +1128,65 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/DFRobot/SEN0492/sen0492.shelly.js",
-    "title": "DFRobot SEN0492 Laser Ranging Sensor - MODBUS-RTU reader",
-    "description": "Reads distance and status from a DFRobot SEN0492 RS485 laser",
+    "fname": "the_pill/MODBUS/Davis/pyranometer.shelly.js",
+    "title": "Davis Pyranometer MODBUS example",
+    "description": "Reads solar irradiance (W/m2) from a Davis-compatible RS-485",
     "tags": [
       "the-pill",
       "modbus-rtu",
       "rs485",
-      "sensors",
-      "monitoring",
-      "distance",
-      "dfrobot"
+      "solar",
+      "davis"
+    ]
+  },
+  {
+    "fname": "the_pill/MODBUS/Davis/pyranometer_vc.shelly.js",
+    "title": "Davis Pyranometer MODBUS-RTU Reader + Virtual Components",
+    "description": "MODBUS-RTU reader for a Davis-compatible RS-485 pyranometer with",
+    "tags": [
+      "the-pill",
+      "modbus-rtu",
+      "rs485",
+      "virtual-components",
+      "solar",
+      "davis"
+    ]
+  },
+  {
+    "fname": "the_pill/MODBUS/Deye/deye.shelly.js",
+    "title": "Deye SG02LP1 MODBUS-RTU",
+    "description": "MODBUS-RTU example for reading Deye SG02LP1 solar inverter",
+    "tags": [
+      "the-pill",
+      "modbus-rtu",
+      "solar",
+      "inverter",
+      "deye"
+    ]
+  },
+  {
+    "fname": "the_pill/MODBUS/Deye/deye_vc.shelly.js",
+    "title": "Deye SG02LP1 MODBUS-RTU + Virtual Components",
+    "description": "MODBUS-RTU reader for Deye SG02LP1 solar inverter with",
+    "tags": [
+      "the-pill",
+      "modbus-rtu",
+      "virtual-components",
+      "solar",
+      "inverter",
+      "deye"
+    ]
+  },
+  {
+    "fname": "the_pill/MODBUS/JKESS/JK200-MBS/jk200.shelly.js",
+    "title": "JK200 BMS MODBUS-RTU Reader",
+    "description": "MODBUS-RTU reader for Jikong JK-PB series BMS over RS485.",
+    "tags": [
+      "the-pill",
+      "modbus-rtu",
+      "rs485",
+      "battery",
+      "jkess"
     ]
   },
   {
@@ -1191,15 +1203,16 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/JKESS/JK200-MBS/jk200.shelly.js",
-    "title": "JK200 BMS MODBUS-RTU Reader",
-    "description": "MODBUS-RTU reader for Jikong JK-PB series BMS over RS485.",
+    "fname": "the_pill/MODBUS/LinkedGo/ST802/st802_bms.shelly.js",
+    "title": "LinkedGo ST802 Thermostat - BMS Modbus RTU Client",
+    "description": "Modbus RTU master that simulates BMS (Building Management System)",
     "tags": [
       "the-pill",
       "modbus-rtu",
-      "rs485",
-      "battery",
-      "jkess"
+      "temperature",
+      "hvac",
+      "building-management",
+      "linkedgo"
     ]
   },
   {
@@ -1217,16 +1230,16 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/LinkedGo/ST802/st802_bms.shelly.js",
-    "title": "LinkedGo ST802 Thermostat - BMS Modbus RTU Client",
-    "description": "Modbus RTU master that simulates BMS (Building Management System)",
+    "fname": "the_pill/MODBUS/MarsRock/SUN-G2/sun_g2.shelly.js",
+    "title": "MarsRock G2 SUN Series Grid-Tie Inverter - MODBUS-RTU reader",
+    "description": "Reads AC output power, AC grid voltage, DC input voltage, and",
     "tags": [
       "the-pill",
       "modbus-rtu",
-      "temperature",
-      "hvac",
-      "building-management",
-      "linkedgo"
+      "energy",
+      "solar",
+      "inverter",
+      "marsrock"
     ]
   },
   {
@@ -1244,16 +1257,17 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/MarsRock/SUN-G2/sun_g2.shelly.js",
-    "title": "MarsRock G2 SUN Series Grid-Tie Inverter - MODBUS-RTU reader",
-    "description": "Reads AC output power, AC grid voltage, DC input voltage, and",
+    "fname": "the_pill/MODBUS/Marstek/VenusE/venus_e.shelly.js",
+    "title": "Marstek VenusE MODBUS-RTU reader",
+    "description": "Reads live battery, AC, energy, temperature, state, alarm, and",
     "tags": [
       "the-pill",
       "modbus-rtu",
+      "sensors",
+      "temperature",
       "energy",
-      "solar",
-      "inverter",
-      "marsrock"
+      "battery",
+      "marstek"
     ]
   },
   {
@@ -1297,20 +1311,6 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/Marstek/VenusE/venus_e.shelly.js",
-    "title": "Marstek VenusE MODBUS-RTU reader",
-    "description": "Reads live battery, AC, energy, temperature, state, alarm, and",
-    "tags": [
-      "the-pill",
-      "modbus-rtu",
-      "sensors",
-      "temperature",
-      "energy",
-      "battery",
-      "marstek"
-    ]
-  },
-  {
     "fname": "the_pill/MODBUS/utils/modbus_scan.shelly.js",
     "title": "Universal MODBUS-RTU Scanner",
     "description": "Discovers MODBUS-RTU slave devices by scanning all combinations",
@@ -1319,6 +1319,17 @@
       "modbus-rtu",
       "monitoring",
       "utility"
+    ]
+  },
+  {
+    "fname": "the_pill/MODBUS/wirenboard/WB-M1W2-v3/wb_m1w2_v3.shelly.js",
+    "title": "WB-M1W2 v3 MODBUS-RTU Reader",
+    "description": "MODBUS-RTU reader for Wirenboard WB-M1W2 v3 1-Wire to RS-485 converter.",
+    "tags": [
+      "the-pill",
+      "modbus-rtu",
+      "rs485",
+      "wirenboard"
     ]
   },
   {
@@ -1334,13 +1345,18 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/wirenboard/WB-M1W2-v3/wb_m1w2_v3.shelly.js",
-    "title": "WB-M1W2 v3 MODBUS-RTU Reader",
-    "description": "MODBUS-RTU reader for Wirenboard WB-M1W2 v3 1-Wire to RS-485 converter.",
+    "fname": "the_pill/MODBUS/wirenboard/WB-MIR-v-3/wb_mir_v3.shelly.js",
+    "title": "WB-MIR v3 MODBUS-RTU Reader",
+    "description": "MODBUS-RTU reader for Wirenboard WB-MIR v3 IR transceiver and environment sensor over RS485. Reads DS18B20 temperature, button press counters, IR module presence, and supply voltages.",
     "tags": [
       "the-pill",
       "modbus-rtu",
       "rs485",
+      "input",
+      "sensors",
+      "temperature",
+      "infrared",
+      "presence",
       "wirenboard"
     ]
   },
@@ -1386,22 +1402,6 @@
     ]
   },
   {
-    "fname": "the_pill/MODBUS/wirenboard/WB-MIR-v-3/wb_mir_v3.shelly.js",
-    "title": "WB-MIR v3 MODBUS-RTU Reader",
-    "description": "MODBUS-RTU reader for Wirenboard WB-MIR v3 IR transceiver and environment sensor over RS485. Reads DS18B20 temperature, button press counters, IR module presence, and supply voltages.",
-    "tags": [
-      "the-pill",
-      "modbus-rtu",
-      "rs485",
-      "input",
-      "sensors",
-      "temperature",
-      "infrared",
-      "presence",
-      "wirenboard"
-    ]
-  },
-  {
     "fname": "the_pill/UART/uart_test.shelly.js",
     "title": "UART test",
     "description": "Simple UART loopback test that sends periodic messages and prints received data.",
@@ -1417,6 +1417,17 @@
     "tags": [
       "the-pill",
       "input",
+      "infrared",
+      "ys-irtm"
+    ]
+  },
+  {
+    "fname": "the_pill/ys_irtm/ir2sw.shelly.js",
+    "title": "YS-IRTM IR-to-switch example",
+    "description": "Maps received IR codes to Shelly switch actions.",
+    "tags": [
+      "the-pill",
+      "switch",
       "infrared",
       "ys-irtm"
     ]
@@ -1442,17 +1453,6 @@
     "description": "Captures and prints NEC IR codes for reuse in other scripts.",
     "tags": [
       "the-pill",
-      "infrared",
-      "ys-irtm"
-    ]
-  },
-  {
-    "fname": "the_pill/ys_irtm/ir2sw.shelly.js",
-    "title": "YS-IRTM IR-to-switch example",
-    "description": "Maps received IR codes to Shelly switch actions.",
-    "tags": [
-      "the-pill",
-      "switch",
       "infrared",
       "ys-irtm"
     ]
