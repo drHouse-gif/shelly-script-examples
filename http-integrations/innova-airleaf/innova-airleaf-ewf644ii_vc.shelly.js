@@ -1,7 +1,6 @@
 /**
  * @title INNOVA AirLeaf EWF644II local controller
- * @description Memory-optimized Shelly Gen3 controller for INNOVA AirLeaf
- *   EWF644II deviceType 002 using the local HTTP API and Virtual Components.
+ * @description Memory-optimized local HTTP controller for INNOVA AirLeaf EWF644II deviceType 002 with Shelly Virtual Components.
  * @status production
  * @link https://github.com/ALLTERCO/shelly-script-examples/blob/main/http-integrations/innova-airleaf/innova-airleaf-ewf644ii_vc.shelly.js
  */
