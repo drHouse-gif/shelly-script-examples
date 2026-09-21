@@ -823,6 +823,11 @@
     ]
   },
   {
+    "fname": "power-energy/pro4pm-load-shedding.shelly.js",
+    "title": "Pro 4PM Load Shedding (Single Device, 16 A)",
+    "description": "Monitors the combined current of all four switch channels on a Shelly Pro 4PM and sheds loads in reverse-priority order (switch 3 first, switch 0 last) to stay below 16 A. Shed switches are restored highest-priority first once current drops below the re-enable threshold."
+  },
+  {
     "fname": "power-energy/advanced-load-shedding.shelly.js",
     "title": "Advanced Load shedding with schedules and notifications",
     "description": "Adds schedule, device, and notification templates and functionality to the original load shedding script.",
