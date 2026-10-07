@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10
+- Add a Midea/Clivet R32 Modbus RTU bridge with exactly nine Virtual Components, controller-version gating, fresh masked writes and physical readback
+- Document the R32 zone-1/DHW profile, wiring and configuration; add 33 deterministic RPC/Modbus tests
+
 ## 2026-08
 - Add `ble/ble-blu-button-presence_vc.shelly.js`, a Shelly BLU button presence watcher that tracks paired `bthomedevice` beacons and auto-creates a Boolean Virtual Component group for nearby/away state
 - Document the BLU button presence watcher step by step in `ble/README.md`, including the native Shelly Webhook (`boolean.change`) pattern for local "away" actions, keeping the published script free of hardcoded URLs
@@ -232,3 +236,4 @@ All notable changes to this project will be documented in this file.
 ## 2021-09
 - Shelly Scripts demonstrating different script or device capabilities
 - `tools/put_script.py` for uploading scripts from the command line.
+
