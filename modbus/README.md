@@ -18,3 +18,6 @@ services.
 ## Structure
 
 - [`Sigenergy/`](Sigenergy/): Sigenergy/SigenStor MODBUS examples for Shelly Pro RS485 Addon
+
+- [`Midea/`](Midea/): Midea/Clivet R32 zone-1 and DHW bridge with nine Virtual Components, preserved shared-register bits and verified readback
+
