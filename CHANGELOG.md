@@ -3,7 +3,6 @@
 All notable changes to this project will be documented in this file.
 
 ## 2026-10
-- Add local HTTP communication with SolaX X3 Hybrid G4 dongles, exposing type-14 telemetry through ten managed Virtual Components as a foundation for dashboards and automations; includes English setup documentation and HTTP fault regression tests, based on contributor-reported working inverter communication on 2026-10-29
 - Add an LG KCHH020LDGC chiller bridge with nine managed Virtual Components, a persistent Modbus address selector, FC05/FC06 commands, confirmed readback, installation documentation and deterministic RTU/UI fault tests; contributor-reported physical test on 2026-10-19
 - Add a hardware-tested Midea/Clivet R32 Modbus RTU bridge with exactly nine Virtual Components, guarded zone-1/DHW/Silent Mode control, fresh masked writes, physical readback, setup documentation and 33 RPC/Modbus tests
 - Add a Local Network Messaging starter collection for firmware 2.0+: message diagnostics, remote switch mirroring, received button control, input-driven multicast group commands, and a TV power follower with configurable hysteresis and delayed OFF control, plus complete setup and troubleshooting documentation

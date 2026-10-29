@@ -308,20 +308,6 @@
     "tags": ["http", "notifications", "pushed"]
   },
   {
-    "fname": "http-integrations/solax/solax-x3-hybrid-g4-local-http.shelly.js",
-    "title": "SolaX X3 Hybrid G4 local HTTP integration",
-    "description": "Local HTTP communication with SolaX X3 Hybrid G4 dongles: read type-14 telemetry and expose it through Shelly Virtual Components. Requires firmware 2.0.0+ with managed VC support.",
-    "doc": "http-integrations/solax/README.md",
-    "tags": [
-      "http",
-      "solax",
-      "x3-hybrid-g4",
-      "pv",
-      "monitoring",
-      "virtual-components"
-    ]
-  },
-  {
     "fname": "http-integrations/tasmota/mitsubishi-heavy-ac/mitsubishi_heavy_ac_vc.shelly.js",
     "title": "Mitsubishi Heavy AC control via Tasmota IR bridge",
     "description": "Creates Virtual Components for Mitsubishi Heavy HVAC control and automatically sends IRHVAC commands to one or more Tasmota IR bridges over HTTP.",

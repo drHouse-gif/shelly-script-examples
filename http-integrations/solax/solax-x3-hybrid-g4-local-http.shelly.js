@@ -2,7 +2,7 @@
 /**
  * @title SolaX X3 Hybrid G4 local HTTP integration
  * @description Local HTTP communication with SolaX X3 Hybrid G4 dongles: read type-14 telemetry and expose it through Shelly Virtual Components. Requires firmware 2.0.0+ with managed VC support.
- * @status production
+ * @status under development
  * @link https://github.com/ALLTERCO/shelly-script-examples/blob/main/http-integrations/solax/solax-x3-hybrid-g4-local-http.shelly.js
  */
 
@@ -35,7 +35,8 @@
  * table are retained from the contributor's working script. Communication
  * with the inverter was reported working on 2026-10-29; exact device/firmware
  * versions and individual power-direction checks were not recorded.
- * See README.md for the zero-based map, setup and validation scope.
+ * The zero-based Data[] map and scales are documented alongside the decoder.
+ * Confirm grid/battery power direction against the specific installation.
  *
  * One HTTP request may be active at a time. Changing Dongle SN invalidates
  * the pending response and triggers a fresh read when that request finishes.
