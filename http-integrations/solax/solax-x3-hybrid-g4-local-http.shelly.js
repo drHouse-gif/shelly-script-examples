@@ -1,10 +1,9 @@
 /* @meta {"vc":{"pv":{"type":"number","config":{"name":"PV power"}},"grid":{"type":"number","config":{"name":"Grid power"}},"load":{"type":"number","config":{"name":"Load power"}},"bat":{"type":"number","config":{"name":"Battery power"}},"soc":{"type":"number","config":{"name":"Battery SOC"}},"totk":{"type":"number","config":{"name":"Total energy"}},"temp":{"type":"number","config":{"name":"Heatsink temperature"}},"mode":{"type":"text","config":{"name":"Operating status"}},"sn":{"type":"text","config":{"name":"Dongle SN","persisted":true,"default_value":""}},"inv":{"type":"group","config":{"name":"SolaX X3 Hybrid G4"}}}} */
 /**
- * @title SolaX X3 Hybrid G4 local HTTP dashboard
- * @description Read local SolaX type-14 telemetry into ten managed Virtual
- *   Components. Requires Shelly firmware 2.0.0+ with managed VC support.
+ * @title SolaX X3 Hybrid G4 local HTTP integration
+ * @description Local HTTP communication with SolaX X3 Hybrid G4 dongles: read type-14 telemetry and expose it through Shelly Virtual Components. Requires firmware 2.0.0+ with managed VC support.
  * @status production
- * @link https://github.com/ALLTERCO/shelly-script-examples/blob/main/http-integrations/solax/solax-x3-hybrid-g4-dashboard.shelly.js
+ * @link https://github.com/ALLTERCO/shelly-script-examples/blob/main/http-integrations/solax/solax-x3-hybrid-g4-local-http.shelly.js
  */
 
 /**
@@ -14,7 +13,9 @@
  * Shelly -> local HTTP POST -> SolaX dongle -> inverter telemetry.
  * Request: optType=ReadRealTimeData&pwd=<dongle serial number>.
  * Response: {sn, ver, type: 14, Data: [...], Information: [...]}.
- * This dashboard only reads telemetry; it sends no inverter control commands.
+ * This integration reads telemetry and exposes it through Virtual Components.
+ * A dashboard is a natural next step built on the received data. This script
+ * sends no inverter control commands.
  *
  * Requirements / setup:
  * - A Shelly device exposing scripts and Script.getVcHandle(), firmware 2.0.0+.
@@ -284,7 +285,7 @@ function onGroupReady(result, errorCode) {
   handles.mode.setValue('Waiting for data');
   Timer.set(CONFIG.period, true, poll);
   poll();
-  print('solax: dashboard started, polling every', CONFIG.period, 'ms');
+  print('solax: local HTTP integration started, polling every', CONFIG.period, 'ms');
 }
 
 function init() {

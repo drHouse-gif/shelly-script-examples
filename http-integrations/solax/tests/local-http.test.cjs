@@ -6,7 +6,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const source = fs.readFileSync(
-  path.join(__dirname, '..', 'solax-x3-hybrid-g4-dashboard.shelly.js'),
+  path.join(__dirname, '..', 'solax-x3-hybrid-g4-local-http.shelly.js'),
   'utf8'
 );
 

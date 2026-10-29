@@ -1,9 +1,32 @@
-# SolaX X3 Hybrid G4 local HTTP dashboard
+# SolaX X3 Hybrid G4 local HTTP integration
 
-[solax-x3-hybrid-g4-dashboard.shelly.js](solax-x3-hybrid-g4-dashboard.shelly.js)
-reads a SolaX X3 Hybrid G4 through its dongle's local HTTP endpoint and displays
-the measurements in Shelly Virtual Components. It sends `ReadRealTimeData`
-requests only; it does not change inverter settings or control its outputs.
+[solax-x3-hybrid-g4-local-http.shelly.js](solax-x3-hybrid-g4-local-http.shelly.js)
+implements local HTTP communication between a Shelly and a SolaX X3 Hybrid G4
+through the inverter's dongle. It sends `ReadRealTimeData` requests, decodes the
+returned type-14 telemetry and exposes the values through Shelly Virtual
+Components for further use.
+
+A dashboard is a natural next step built on this connection and its telemetry.
+The current integration provides the local data access and component values
+needed for that extension. Its inverter operations are read-only.
+
+## Local HTTP communication
+
+The Shelly sends the following request to the dongle's local IP address:
+
+```http
+POST / HTTP/1.1
+Host: <dongle-ip>
+Content-Type: application/x-www-form-urlencoded
+
+optType=ReadRealTimeData&pwd=<dongle-serial>
+```
+
+The response contains inverter telemetry in the `Data` array, with `type: 14`
+identifying the expected layout. Other fields can include `sn`, `ver` and
+`Information`. The script checks the response, decodes the selected array entries
+and updates the corresponding Virtual Components. No SolaX cloud API is involved
+in this exchange.
 
 ## Requirements
 
@@ -65,8 +88,8 @@ addresses. The decoding below is preserved from the contributor's working script
 
 The original sign interpretation was **grid: positive import / negative export**
 and **battery: positive charge / negative discharge**. These direction labels
-have not been independently confirmed for the installation, so the dashboard
-shows signed watts without assigning an import/export or charge/discharge label.
+have not been independently confirmed for the installation, so the power
+components expose signed watts without assigning a direction label.
 Check the signs against real operating conditions before using them in automations.
 The total-energy signed conversion is also retained, rather than silently
 substituting a different map. The display ranges are validation bounds, not
@@ -94,6 +117,14 @@ displayed as `Code <number>`.
 The local endpoint uses HTTP and the serial as its password. Use it on a trusted
 local network. The repository contains neither a live address nor a real serial.
 
+## Dashboard as a next step
+
+The exposed PV, grid, load, battery, SOC, energy, temperature and status values
+can be used to build a dashboard or further automations. That presentation can
+be developed on top of this local HTTP integration. Use the communication/status
+component alongside the measurements so a failed read is visible as stale data,
+and verify power-direction signs before adding energy-flow labels or logic.
+
 ## Validation
 
 The contributor reported successful communication with the inverter using the
@@ -107,7 +138,7 @@ APIs, including transport failures, invalid responses and serial changes. They
 verify software behavior; they do not establish firmware or physical compatibility.
 
 ```sh
-node --test http-integrations/solax/tests/dashboard.test.cjs
+node --test http-integrations/solax/tests/local-http.test.cjs
 python3 tools/check-manifest-integrity.py --check-headers --check-sync
 ```
 

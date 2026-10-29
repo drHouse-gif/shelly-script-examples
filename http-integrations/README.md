@@ -14,7 +14,7 @@ Use these when you need Shelly to talk to external services or expose data via H
 - `innova-airleaf/innova-airleaf-ewf644ii_vc.shelly.js` - production (see `innova-airleaf/README.md`)
 - `prometheus/prometheus.shelly.js`
 - `push-pushed/push-pushed.shelly.js`
-- `solax/solax-x3-hybrid-g4-dashboard.shelly.js` - production (see `solax/README.md`)
+- `solax/solax-x3-hybrid-g4-local-http.shelly.js` - production (see `solax/README.md`)
 - `tasmota/mitsubishi-heavy-ac/mitsubishi_heavy_ac_vc.shelly.js` - production (see `tasmota/README.md`)
 - `telegram/telegram-interaction.shelly.js` (see `telegram/README.md`)
 
@@ -25,7 +25,7 @@ Use these when you need Shelly to talk to external services or expose data via H
 - `ecoflow/stream-ultra/README.md` - STREAM Ultra load balancing setup and configuration.
 - `finance-yahoo/README.md` - Yahoo Finance stock monitor purpose, persona, and setup notes.
 - `innova-airleaf/README.md` - INNOVA AirLeaf EWF644II local HTTP control and Shelly Smart Control setup.
-- `solax/README.md` - SolaX X3 Hybrid G4 local HTTP telemetry, managed Virtual Components and setup.
+- `solax/README.md` - Local HTTP communication with SolaX X3 Hybrid G4 dongles and telemetry for dashboards and automations.
 - `tasmota/README.md` - Shelly-to-Tasmota control relationship and collection overview.
 - `tasmota/mitsubishi-heavy-ac/README.md` - Mitsubishi Heavy AC control flow, target mapping, and endpoint setup.
 - `telegram/README.md` - Telegram bot setup and command configuration.

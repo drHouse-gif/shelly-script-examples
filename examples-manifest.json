@@ -308,9 +308,9 @@
     "tags": ["http", "notifications", "pushed"]
   },
   {
-    "fname": "http-integrations/solax/solax-x3-hybrid-g4-dashboard.shelly.js",
-    "title": "SolaX X3 Hybrid G4 local HTTP dashboard",
-    "description": "Read local SolaX type-14 telemetry into ten managed Virtual",
+    "fname": "http-integrations/solax/solax-x3-hybrid-g4-local-http.shelly.js",
+    "title": "SolaX X3 Hybrid G4 local HTTP integration",
+    "description": "Local HTTP communication with SolaX X3 Hybrid G4 dongles: read type-14 telemetry and expose it through Shelly Virtual Components. Requires firmware 2.0.0+ with managed VC support.",
     "doc": "http-integrations/solax/README.md",
     "tags": [
       "http",
