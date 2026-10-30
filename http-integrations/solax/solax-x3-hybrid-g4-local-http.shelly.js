@@ -1,4 +1,4 @@
-/* @meta {"vc":{"pv":{"type":"number","config":{"name":"PV мощност"}},"grid":{"type":"number","config":{"name":"Мрежа"}},"load":{"type":"number","config":{"name":"Товар"}},"bat":{"type":"number","config":{"name":"Батерия"}},"soc":{"type":"number","config":{"name":"Заряд"}},"totk":{"type":"number","config":{"name":"Общо"}},"temp":{"type":"number","config":{"name":"Радиатор"}},"mode":{"type":"text","config":{"name":"Режим"}},"sn":{"type":"text","config":{"name":"Донгъл SN","persisted":true,"default_value":""}},"inv":{"type":"group","config":{"name":"Solax X3 Hybrid G4"},"members":["@pv","@grid","@load","@bat","@soc","@totk","@temp","@mode","@sn"]}}} */
+/* @meta {"vc":{"pv":{"type":"number","config":{"name":"PV Power"}},"grid":{"type":"number","config":{"name":"Grid Power"}},"load":{"type":"number","config":{"name":"Load Power"}},"bat":{"type":"number","config":{"name":"Battery Power"}},"soc":{"type":"number","config":{"name":"Battery SoC"}},"totk":{"type":"number","config":{"name":"Total Energy"}},"temp":{"type":"number","config":{"name":"Heatsink Temperature"}},"mode":{"type":"text","config":{"name":"Operating Mode"}},"sn":{"type":"text","config":{"name":"Dongle SN","persisted":true,"default_value":""}},"inv":{"type":"group","config":{"name":"Solax X3 Hybrid G4"},"members":["@pv","@grid","@load","@bat","@soc","@totk","@temp","@mode","@sn"]}}} */
 /**
  * @title SolaX X3 Hybrid G4 local HTTP integration
  * @description Local HTTP communication with a SolaX X3 Hybrid G4 dongle, exposing type-14 telemetry through Virtual Components.
@@ -73,7 +73,7 @@ function applyGroup() {
     m[i] = (isText(r) ? "text:" : "number:") + JSON.stringify(H[r].getConfig().id);
   }
   Shelly.call("Group.Set", { id: INV.getConfig().id, value: m });
-  print("solax: групата напълнена с", m.length, "компонента");
+  print("solax: group initialized with", m.length, "components");
 }
 
 // Configuration is persistent; write units only when missing.
@@ -82,7 +82,7 @@ function applyUi() {
     let row = UI[i];
     let h = H[row[0]];
     if (h === undefined) {
-      print("solax: липсва компонент", row[0]);
+      print("solax: missing component", row[0]);
       continue;
     }
     let cfg = h.getConfig();
@@ -120,7 +120,7 @@ function r1(v) {
 
 function onData(res, err) {
   if (err !== 0 || res === null || res.code !== 200) {
-    H.mode.setValue("няма връзка");
+    H.mode.setValue("connection failed");
     print("solax: HTTP err", err, res === null ? "-" : res.code);
     return;
   }
@@ -130,14 +130,14 @@ function onData(res, err) {
   let d = r.Data;
 
   if (d === undefined || d.length < 110) {
-    H.mode.setValue("лош отговор");
+    H.mode.setValue("invalid response");
     return;
   }
 
   // Incorrect credentials can return {code, message:"failed"} without Data.
   // Keep the original response-serial diagnostic.
   if (r.sn !== undefined && r.sn !== H.sn.getValue()) {
-    print("solax: отговори донгъл", r.sn);
+    print("solax: response from dongle", r.sn);
   }
 
   H.pv.setValue(d[14] + d[15]);                // PV1 + PV2 power.
@@ -147,13 +147,13 @@ function onData(res, err) {
   H.soc.setValue(d[103]);                      // Battery state of charge.
   H.totk.setValue(r1(s32(d[68], d[69]) / 10)); // Total generated energy.
   H.temp.setValue(s16(d[54]));                 // Heatsink temperature.
-  H.mode.setValue(d[19] < MODE.length ? MODE[d[19]] : "код " + JSON.stringify(d[19]));
+  H.mode.setValue(d[19] < MODE.length ? MODE[d[19]] : "code " + JSON.stringify(d[19]));
 }
 
 function poll() {
   let sn = H.sn.getValue();
   if (sn === null || sn === "") {
-    H.mode.setValue("липсва SN");
+    H.mode.setValue("missing SN");
     return;
   }
   Shelly.call("HTTP.POST", {
@@ -166,7 +166,7 @@ function poll() {
 
 // A serial change requests data immediately, without waiting for the timer.
 H.sn.on("change", function (ev) {
-  print("solax: нов SN ->", ev.value);
+  print("solax: new SN ->", ev.value);
   poll();
 });
 
@@ -175,7 +175,7 @@ function init() {
   applyGroup();
   Timer.set(CFG.period, true, poll);
   poll();
-  print("solax dash: тръгна, период", CFG.period, "ms");
+  print("solax dash: started, interval", CFG.period, "ms");
 }
 
 init();
