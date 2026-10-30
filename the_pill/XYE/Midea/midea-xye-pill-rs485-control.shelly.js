@@ -1,28 +1,35 @@
-// =====================================================================
-// Midea XYE control for The Pill + RS485 add-on.
-// Target: MCA4U-18HRFNX(GA) on CN3, wired A->X, B->Y, GND->E.
-// Verified working 2026-10-24 against unit address 0.
-//
-// Prereqs: Pill peripheral mode js_uart, serial 4800 8N1 half duplex,
-// and NO other script running (only one may own UART 0).
-//
-// CRITICAL: binary frames are built with String.fromCharCode(), NEVER with
-// chr(). chr(0) returns an empty string in this engine, so a chr()-built
-// 16-byte frame goes on the wire as 6 bytes and the unit ignores it. That
-// single bug cost this project two days.
-//
-// Creates five virtual components:
-//   enum:200   Mode       off / cool / heat / dry / fan
-//   enum:201   Fan        auto / low / medium / high   (dropdown in HA)
-//   number:202 Setpoint   16-30 C
-//   number:203 Room       T1, read-back only
-//   text:204   Status     one-line summary
-//   boolean:205 Power     on / off, remembers the last running mode
-//
-// Control is read-modify-write: a SET frame carries mode, fan and setpoint
-// together, so changing one field means resending the other two unchanged.
-// After every SET the unit is re-queried and the result compared.
-// =====================================================================
+/**
+ * @title Midea XYE RS485 control for The Pill
+ * @description Controls Midea XYE indoor units over RS485 using The Pill UART add-on, with six Virtual Components for Home Assistant.
+ * @status under development
+ * @link https://github.com/ALLTERCO/shelly-script-examples/blob/main/the_pill/XYE/Midea/midea-xye-pill-rs485-control.shelly.js
+ */
+
+/**
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2026 Georgi Germanov and contributors
+ *
+ * Hardware-tested on 2026-10-24 with MCA4U-18HRFNX(GA), unit address 0.
+ * Connection: indoor-unit CN3 X -> RS485 A, Y -> RS485 B, E -> GND.
+ * Requires The Pill in js_uart mode, UART 0 at 4800 8N1, half-duplex.
+ * Only one script can own UART 0. No other script may use that port.
+ *
+ * Six Virtual Components (IDs are configurable from BASE=200):
+ * - enum:200   AC Mode (off, auto, cool, heat, dry, fan)
+ * - enum:201   AC Fan (auto, low, medium, high)
+ * - number:202 AC Setpoint (16-30 C)
+ * - number:203 AC Room (read-only T1 temperature)
+ * - text:204   AC Status (diagnostics)
+ * - boolean:205 AC Power (on/off; restores the last running mode)
+ *
+ * SET commands preserve current mode, fan and setpoint and are verified by
+ * readback. AUTO-mode write byte is not yet hardware-confirmed.
+ * ALLOW_WRITE defaults to true; disable writes in CFG for monitoring only.
+ * Site-wide mutual exclusion of multiple AC units is NOT implemented here.
+ *
+ * Binary frames must use String.fromCharCode(), not chr(): on this engine,
+ * chr(0) creates an empty string and corrupts 16-byte frames.
+ */
 
 let CFG = {
   // HARD WRITE LOCK. While false the script is strictly read-only: no SET frame
@@ -51,10 +58,10 @@ let FAN_OPTS = ["auto", "low", "medium", "high"];
 // EVERY entity of the select and sensor platforms for this device - including
 // the device's own native sensors. Verified on HA 2026.10.4, 2026-10-26.
 // Both mode and fan are real enums, so both become dropdowns in HA.
-let FAN_TITLES = { auto: "Авто", low: "Ниско", medium: "Средно", high: "Високо" };
+let FAN_TITLES = { auto: "Auto", low: "Low", medium: "Medium", high: "High" };
 let MODE_TITLES = {
-  off: "Изключен", auto: "Авто", cool: "Охлаждане",
-  heat: "Отопление", dry: "Изсушаване", fan: "Вентилация"
+  off: "Off", auto: "Auto", cool: "Cooling",
+  heat: "Heating", dry: "Dry", fan: "Fan"
 };
 let FAN_BYTE = { auto: 0x80, low: 0x04, medium: 0x02, high: 0x01 };
 
